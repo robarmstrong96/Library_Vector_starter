@@ -19,14 +19,15 @@ const char DELIMITER = ',';
  * 			SUCCESS if all data is loaded
  * */
 int loadBooks(std::vector<book> &books, const char* filename) {
-	//books.clear();
-	std::fstream inputFile; inputFile.open(filename, std::fstream::in);
-	string line; int i, j = 0;
-	if(inputFile.is_open() || !(inputFile.peek() == std::ifstream::traits_type::eof())) { // Check if file is open/exists
+	books.clear();
+	std::fstream inputFile;
+	inputFile.open(filename, ios::in);
+	string line;
+	int i, j = 0;
+	if(inputFile.is_open()) { // Check if file is open/exists
 		for (j = 0; !inputFile.eof(); j++) { // Loops through lines in file
 			getline(inputFile,line);
 			if (line == "" || line == " ") { //Checks if blank line
-				inputFile.close();
 				if (j == 0) {  // Checks if empty
 					return NO_BOOKS_IN_LIBRARY;
 				}
@@ -54,7 +55,6 @@ int loadBooks(std::vector<book> &books, const char* filename) {
 			}
 			books.push_back(temp_struct);
 		}
-	  inputFile.close();
 		return SUCCESS; // Successful read on all data
 	}
 	return COULD_NOT_OPEN_FILE;
@@ -68,12 +68,12 @@ int loadBooks(std::vector<book> &books, const char* filename) {
 int saveBooks(std::vector<book> &books, const char* filename) {
 	if (books.size() == 0) { return NO_BOOKS_IN_LIBRARY; }
 	std::fstream outputFile;
-	outputFile.open(filename, std::fstream::out); string temp;
-	if(outputFile.is_open() || !(outputFile.peek() == std::ifstream::traits_type::eof())) { // Check if file is open/exists
-		for (int i = 0; i < books.size(); i++) {
+	outputFile.open(filename, ios::out | ios::trunc);
+	string temp;
+	if(outputFile.is_open() || outputFile.good()) { // Check if file is open/exists
+		for (int i = 0; i < (int)books.size(); i++) {
 			outputFile << books[i].book_id << DELIMITER << books[i].title << DELIMITER << books[i].author << DELIMITER << books[i].state << DELIMITER << books[i].loaned_to_patron_id << endl;
 		}
-		outputFile.close();
 		return SUCCESS;
 	}
 	return COULD_NOT_OPEN_FILE;
@@ -86,14 +86,14 @@ int saveBooks(std::vector<book> &books, const char* filename) {
  * */
 int loadPatrons(std::vector<patron> &patrons, const char* filename) {
 	patrons.clear();
-	std::fstream inputFile; inputFile.open(filename, ios::in);
-	string line; int i, j = 0;
-	if(inputFile.is_open() || !(inputFile.peek() == std::ifstream::traits_type::eof()) || inputFile.good()) { // Check if file is open/exists
+	std::fstream inputFile;
+	inputFile.open(filename, ios::in);
+	string line;
+	int i, j = 0;
+	if(inputFile.is_open()) { // Check if file is open/exists
 		for (j = 0; !inputFile.eof(); j++) { // Loops through lines in file
 			getline(inputFile,line);
-			//cout << "Load Patron File Line: \'" << line << "\'" << j << "\r";
 			if (line == "" || line == " ") { //Checks if blank line
-				inputFile.close();
 				if (j == 0) {  // Checks if empty
 					return NO_PATRONS_IN_LIBRARY;
 				}
@@ -115,7 +115,6 @@ int loadPatrons(std::vector<patron> &patrons, const char* filename) {
 			}
 			patrons.push_back(temp_struct);
 		}
-	  inputFile.close();
 		return SUCCESS; // Successful read on all data
 	}
 	return COULD_NOT_OPEN_FILE;
@@ -129,12 +128,11 @@ int loadPatrons(std::vector<patron> &patrons, const char* filename) {
 int savePatrons(std::vector<patron> &patrons, const char* filename) {
 	if (patrons.size() == 0) { return NO_PATRONS_IN_LIBRARY; }
 	std::fstream outputFile;
-	outputFile.open(filename, ios::out); string temp;
-	if(outputFile.is_open() || !(outputFile.peek() == std::ifstream::traits_type::eof()) || outputFile.good()) { // Check if file is open/exists
-		for (int i = 0; i < patrons.size(); i++) {
+	outputFile.open(filename, ios::out | ios::trunc);
+	if(outputFile.is_open() || outputFile.good()) { // Check if file is open/exists
+		for (int i = 0; i < (int) patrons.size(); i++) {
 			outputFile << patrons[i].patron_id << DELIMITER << patrons[i].name << DELIMITER << patrons[i].number_books_checked_out << endl;
 		}
-		outputFile.close();
 		return SUCCESS;
 	}
 	return COULD_NOT_OPEN_FILE;

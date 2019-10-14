@@ -12,8 +12,8 @@ using namespace std;
 std::vector<book> book_vector;
 std::vector<patron> patron_vector;
 
-int temp_1 = loadBooks(book_vector, BOOKFILE.c_str());
-int temp_2 = loadPatrons(patron_vector, PATRONFILE.c_str());
+//int temp_1 = loadBooks(book_vector, BOOKFILE.c_str());
+//int temp_2 = loadPatrons(patron_vector, PATRONFILE.c_str());
 
 //NOTE: please ensure patron and book data are loaded from disk before calling the following
 //NOTE: also make sure you save patron and book data to disk any time you make a change to them
@@ -52,12 +52,9 @@ void reloadAllData() {
  *         TOO_MANY_OUT patron has the max number of books allowed checked out
  */
 int checkout(int bookid, int patronid) {
-	/**loadBooks(book_vector, BOOKFILE.c_str());	loadPatrons(patron_vector, PATRONFILE.c_str());
+	loadBooks(book_vector, BOOKFILE.c_str());	loadPatrons(patron_vector, PATRONFILE.c_str());
 	bool patron_exists = PATRON_NOT_ENROLLED; bool book_exists = BOOK_NOT_IN_COLLECTION;
-	cout << "\t" << "Book Size: " << numbBooks() << endl;
-	cout << "\tPatron Size: " << numbPatrons() << endl;
 	for (int i = 0; i < numbPatrons(); i++) { // Patron loop
-		cout << "\t Current: " << patron_vector[i].patron_id << ". Index: " << patronid << endl;
 		if (patronid == patron_vector[i].patron_id) { // Patron exists
 			patron_exists = SUCCESS;
 			if (patron_vector[i].number_books_checked_out >= MAX_BOOKS_ALLOWED_OUT) { // Max books checked out for patron
@@ -80,7 +77,7 @@ int checkout(int bookid, int patronid) {
 			}
 		}
 	}
-	saveBooks(book_vector, BOOKFILE.c_str()); savePatrons(patron_vector, PATRONFILE.c_str());**/
+	saveBooks(book_vector, BOOKFILE.c_str()); savePatrons(patron_vector, PATRONFILE.c_str());
 	return SUCCESS;
 }
 
@@ -159,4 +156,5 @@ int whatIsPatronName(std::string &name,int patronid) {
 		}
 	}
 	return PATRON_NOT_ENROLLED;
+	return 0;
 }
